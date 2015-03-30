@@ -3,8 +3,19 @@
 
 #define MAX 65536
 
-//speed up: op(), consider remove hash/unhash, and use bit operator instead
-int FLIP[16] = {4383, 8751, 17487, 34959, 4593, 8946, 17652, 35064, 7953, 12066, 20292, 36744, 61713, 61986, 62532, 63624};
+/*
+speed up: op(), consider remove hash/unhash, and use bit operator instead
+generate by code:
+
+	for(int i=0;i<16;i++){
+		char a[16];
+		memset(a, 0, sizeof(a));
+		op(a, i);
+		printf("%d,\n", hash(a));
+	}
+	
+*/
+const int FLIP[16] = {4383, 8751, 17487, 34959, 4593, 8946, 17652, 35064, 7953, 12066, 20292, 36744, 61713, 61986, 62532, 63624};
 
 inline int hash(char * b){
 	int h = 0;
@@ -133,14 +144,6 @@ void solution(){
 int main(void){
 	freopen("p2965.in", "r", stdin);
 	
-	/*
-	for(int i=0;i<16;i++){
-		char a[16];
-		memset(a, 0, sizeof(a));
-		op(a, i);
-		printf("%d,\n", hash(a));
-	}
-	*/
 	solution();
 	return 0;
 }
