@@ -35,7 +35,7 @@ inline void updateUp(int n){
 
 //区间更新
 void update(int n, int l, int r, int value){
-	if(seg[n].left == seg[n].right){
+	if(seg[n].left == seg[n].right && l <= seg[n].left && seg[n].right <= r){
 		seg[n].value = value;
 		return;
 	}
