@@ -9,6 +9,7 @@ const int MAX_INT = 1 << 30;
 struct node {
 	int left, right;
 	int value;
+	int dirty;
 };
 
 struct node seg[MAX_SEG] = {0};
@@ -18,6 +19,7 @@ int len;
 void build(int n, int l, int r){
 	seg[n].left = l;
 	seg[n].right = r;
+	seg[n].dirty = 0;
 	if(l == r){
 		seg[n].value = a[l];
 	}else{
@@ -62,9 +64,18 @@ void update(int n, int l, int r){
 			seg[n].value = a[seg[n].left]; 
 		}else{
 			seg[n].value = min(seg[n*2].value, seg[n*2+1].value);
+			seg[n].dirty = 1;
 		}
 		return;
 	}
+	int mid = (seg[n].left+seg[n].right)/2;
+	if(l < mid){
+		update(seg[n].left, l, r);	
+	}
+	if(r > mid){
+		update(seg[n].right, l, r);	
+	}
+	updateUp(n);
 }
 
 int main(void){
@@ -77,7 +88,7 @@ int main(void){
 	
 	build(1, 0, len);
 	
-	int left = 3;
+	int left = 0;
 	int right = 5;
 	printf("query(%d, %d)=%d\n", left, right, query(1, left, right));
 	
