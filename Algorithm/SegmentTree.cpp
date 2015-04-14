@@ -47,8 +47,7 @@ void update(int n, int l, int r, int value){
 
 int query(int n, int l, int r){
 	if(seg[n].left > r || seg[n].right < l){
-		//求最小值，使用一个trick 
-		return MAX_INT;	
+		return MAX_INT;	//求最小值trick 
 	}
 	
 	if(l <= seg[n].left && seg[n].right <= r){
