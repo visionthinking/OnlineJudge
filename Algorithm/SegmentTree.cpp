@@ -9,7 +9,6 @@ const int MAX_INT = 1 << 30;
 struct node {
 	int left, right;
 	int value;
-	int dirty;
 };
 
 struct node seg[MAX_SEG] = {0};
@@ -19,7 +18,6 @@ int len;
 void build(int n, int l, int r){
 	seg[n].left = l;
 	seg[n].right = r;
-	seg[n].dirty = 0;
 	if(l == r){
 		seg[n].value = a[l];
 	}else{
@@ -30,15 +28,31 @@ void build(int n, int l, int r){
 	}
 }
 
+//单点向上更新
+inline void updateUp(int n){
+	seg[n].value = min(seg[n*2].value, seg[n*2+1].value);
+}
+
+//区间更新
+void update(int n, int l, int r, int value){
+	if(seg[n].left == seg[n].right){
+		seg[n].value = value;
+		return;
+	}
+	int mid = (seg[n].left+seg[n].right)/2;
+	if(l <= mid) update(n*2, l, mid, value);
+	if(r > mid)  update(n*2+1, mid+1, r, value);	
+	updateUp(n);
+}
+
 int query(int n, int l, int r){
 	if(seg[n].left > r || seg[n].right < l){
-		//由于是求最小值，使用一个trick 
+		//求最小值，使用一个trick 
 		return MAX_INT;	
 	}
 	
 	if(l <= seg[n].left && seg[n].right <= r){
-		//如果是叶子节点，直接返回，减少更新的麻烦 
-		return (seg[n].left == seg[n].right) ? a[seg[n].left] : seg[n].value;
+		return seg[n].value;
 	}
 	int v1, v2;
 	v1 = query(n*2, l, r);
@@ -46,36 +60,14 @@ int query(int n, int l, int r){
 	return min(v1, v2);
 }
 
-//单点向上更新 (不会越界，因为每一个非叶子节点都会有两个孩子)
-void updateUp(int n){
-	if(n == 1) {
+
+void debug(int n){
+	printf("%d [%d-%d] value=%d\n", n, seg[n].left, seg[n].right, seg[n].value);
+	if(seg[n].left == seg[n].right){
 		return;
 	}
-	int p = n / 2;
-	seg[p].value = min(seg[p*2].value, seg[p*2+1].value);
-	updateUp(p);
-}
-
-
-//区间更新(use 'Dirty' mark) 
-void update(int n, int l, int r){
-	if(l <= seg[n].left && seg[n].right <= r){
-		if(seg[n].left == seg[n].right){
-			seg[n].value = a[seg[n].left]; 
-		}else{
-			seg[n].value = min(seg[n*2].value, seg[n*2+1].value);
-			seg[n].dirty = 1;
-		}
-		return;
-	}
-	int mid = (seg[n].left+seg[n].right)/2;
-	if(l < mid){
-		update(seg[n].left, l, r);	
-	}
-	if(r > mid){
-		update(seg[n].right, l, r);	
-	}
-	updateUp(n);
+	debug(n*2);
+	debug(n*2+1);
 }
 
 int main(void){
@@ -86,7 +78,9 @@ int main(void){
 		scanf("%d", &a[i]);
 	}
 	
-	build(1, 0, len);
+	build(1, 0, len-1);
+	
+	update(1, 0, 2, 10);
 	
 	int left = 0;
 	int right = 5;
