@@ -15,22 +15,21 @@ struct node seg[MAX_SEG] = {0};
 int a[MAX];
 int len;
 
+//向上更新
+inline void updateUp(int n){
+	seg[n].value = min(seg[n*2].value, seg[n*2+1].value);
+}
+
 void build(int n, int l, int r){
 	seg[n].left = l;
 	seg[n].right = r;
 	if(l == r){
 		seg[n].value = a[l];
-	}else{
-		build(n*2, l, (l+r)/2);
-		build(n*2+1, (l+r)/2+1, r);
-		
-		seg[n].value = min(seg[n*2].value, seg[n*2+1].value);
+		return;
 	}
-}
-
-//单点向上更新
-inline void updateUp(int n){
-	seg[n].value = min(seg[n*2].value, seg[n*2+1].value);
+	build(n*2, l, (l+r)/2);
+	build(n*2+1, (l+r)/2+1, r);
+	updateUp(n);
 }
 
 //区间更新
@@ -40,8 +39,8 @@ void update(int n, int l, int r, int value){
 		return;
 	}
 	int mid = (seg[n].left+seg[n].right)/2;
-	if(l <= mid) update(n*2, l, mid, value);
-	if(r > mid)  update(n*2+1, mid+1, r, value);	
+	if(l <= mid) update(n*2, l, r, value);
+	if(r > mid)  update(n*2+1, l, r, value);	
 	updateUp(n);
 }
 
@@ -61,7 +60,7 @@ int query(int n, int l, int r){
 
 
 void debug(int n){
-	printf("%d [%d-%d] value=%d\n", n, seg[n].left, seg[n].right, seg[n].value);
+	printf("%d\t[%d-%d] value=%d\n", n, seg[n].left, seg[n].right, seg[n].value);
 	if(seg[n].left == seg[n].right){
 		return;
 	}
@@ -84,6 +83,8 @@ int main(void){
 	int left = 0;
 	int right = 5;
 	printf("query(%d, %d)=%d\n", left, right, query(1, left, right));
+	
+	debug(1);
 	
 	return 0;
 }
