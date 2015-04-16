@@ -2,7 +2,7 @@
 #include <string.h>
 #include <algorithm>
 
-#define MAX 100000
+const int MAX = 100000;
 
 struct node {
 	int next[28];
@@ -18,6 +18,7 @@ int res_len = 0;
 
 int union_set[MAX];
 
+//模拟malloc 
 int alloc(){
 	memset(&q[len], 0, sizeof(struct node));
 	q[len].id = -1;
@@ -25,6 +26,7 @@ int alloc(){
 	return len-1;
 }
 
+//插入一个结果，对结果去重 
 void insert_result(int n){
 	for(int i=0;i<res_len;i++){
 		if(result[i] == n){
@@ -35,6 +37,7 @@ void insert_result(int n){
 	res_len += 1;
 }
 
+//输出结果 
 void print_result(){
 	if(res_len == 0){
 		printf("Not match\n");
@@ -48,6 +51,7 @@ void print_result(){
 	res_len = 0;
 }
 
+//建立字典树 
 void insert(char * str, int id){
 	int p = 0;
 	for(int i=0;str[i];i++){
@@ -70,6 +74,7 @@ void insert(char * str, int id){
 	q[p].id = id;
 }
 
+//把同一个集合里的加入到结果中 
 void union_insert(int i){
 	while(i != -1){
 		insert_result(i);
@@ -80,49 +85,21 @@ void union_insert(int i){
 void find(int p, char * str, int len, char x){
 	//printf("%d,%s,%d,%d\n", p, str, len, x); 	
 	
-	//* 同时 
+	// 同时被消耗完
 	if(q[p].id != -1 && len == 0){
 		union_insert(q[p].id);
-		//return;
 	}
-	
-	//* 字典先被消耗完
-	/*if(q[p].leaf){
-		if(x == 27){
-			union_insert(q[p].id);
-			//return;	
-		}
-	}
-	
-	//* 字符串先被消耗完
-	if(len == 0){
-		int i = p;
-		do{
-			i = q[i].next[27];
-		}while(q[i].next[27]);
-		if(q[i].leaf){
-			union_insert(q[p].id);
-			i = q[p].next[27];
-			while(i){
-				union_insert(q[i].id);
-				i = q[i].next[27];
-			}
-		}
-	}*/
 	
 	if(len > 0){
 		char k = str[0] - 'a';
 		if(q[p].next[k] != 0){
-			//printf("k=%d\n", k);
 			find(q[p].next[k], str+1, len-1, k);
 		}
 		if(q[p].next[26] != 0){
-			//printf("k=%d\n", 26);
 			find(q[p].next[26], str+1, len-1, 26);
 		}
 	}
 	if(q[p].next[27] != 0){
-		//printf("k=%d\n", 27);
 		for(int i=0;i<=len;i++){
 			find(q[p].next[27], str+i, len-i, 27);
 		}
@@ -130,7 +107,6 @@ void find(int p, char * str, int len, char x){
 }
 
 void debug(int n){
-	//if(q[n].leaf) return;
 	int i;
 	for(i=0;i<28;i++){
 		if(q[n].next[i]){
@@ -149,13 +125,11 @@ void solution(int n, int m){
 	
 	for(i=0;i<n;i++){
 		scanf("%s", str);
-		//printf("%d: %s\n", i, str);
 		insert(str, i);
 	}
-	debug(0);
+	
 	for(i=0;i<m;i++){
 		scanf("%s", str);
-		//printf("%s\n", str);
 		res_len = 0;
 		find(0, str, strlen(str), -1);
 		print_result();
