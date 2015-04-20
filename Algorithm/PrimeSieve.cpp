@@ -8,7 +8,7 @@ const int MAX = 1000;
 const int SQRT_MAX = sqrt(MAX);
 bool prime[MAX];
 
-//±ê×¼µÄÉ¸·¨(²Î¼û http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes ) 
+//æ ‡å‡†çš„ç­›æ³•(å‚è§ http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes ) 
 void fill_prime(){
 	memset(prime, true, sizeof(prime));
 	prime[0] = false;
