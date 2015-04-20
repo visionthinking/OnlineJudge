@@ -5,31 +5,31 @@
 
 
 const int MAX = 1000;
-const int SQRT_MAX = sqrt(MAX);
 bool prime[MAX];
 
-//标准的筛法(参见 http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes ) 
-void fill_prime(){
+//Prime Sieve ( see http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes ) 
+void fill_prime(const int max){
+	int sqrt_max = sqrt(max);
 	memset(prime, true, sizeof(prime));
 	prime[0] = false;
 	prime[1] = false;
-	for (int i=2; i < SQRT_MAX; i++) {
+	for (int i=2; i <= sqrt_max; i++) {
 		if (prime[i]) {
-			for (int k=i*i; k < MAX; k+=i) {
+			for (int k=i*i; k < max; k+=i) {
 				prime[k] = false;
 			}
 		}
 	}
 }
 
-void show_prime(){
+void show_prime(const int max){
 	for (int i=1; i < MAX; i++) {
 		if(prime[i]) printf("%d ", i);     
 	}	
 }
 
 int main(void){
-	fill_prime();
-	show_prime();
+	fill_prime(MAX);
+	show_prime(MAX);
 	return 0;	
 }
