@@ -26,7 +26,6 @@ int v[26];
 void read(){
 	dq.clear();
 	
-	memset(prg, 0, sizeof(prg));
 	memset(v, 0, sizeof(v));
 	
 	scanf("%d", &n);
@@ -44,9 +43,11 @@ void read(){
 			int len = strlen(prg[i].s[j]);
 			prg[i].s[j][len-1] = 0;
 			//printf("%s len=%d\n", prg[i].s[j], len);
-			j += 1;
-			if(memcmp("end", prg[i].s[j-1], 3) == 0){
-				break;
+			if(len > 1){
+				j += 1;
+				if(prg[i].s[j-1][2] == 'd'){
+					break;
+				}
 			}
 		}
 		prg[i].id = i+1;
@@ -73,15 +74,15 @@ void solve(int solve_id){
 			run = top->run;
 			top->run += 1;
 			op = top->s[run][2];
-			if(top->s[run][2] == '='){
+			if(op == '='){
 				M -= t[0];
 				int value;
 				sscanf(top->s[run] + 4, "%d", &value);
 				v[top->s[run][0] - 'a'] = value;
-			}else if(memcmp("print", top->s[run], 5)==0){
+			}else if(op == 'i'){
 				M -= t[1];
 				printf("%d: %d\n", top->id, v[top->s[run][6] - 'a']);
-			}else if(memcmp("lock", top->s[run], 4)==0){
+			}else if(op == 'c'){
 				M -= t[2];
 				if(lock){
 					top->run -= 1;
@@ -91,14 +92,14 @@ void solve(int solve_id){
 				}else{
 					lock = true;
 				}
-			}else if(memcmp("unlock", top->s[run], 6)==0){
+			}else if(op == 'l'){
 				M -= t[3];
 				lock = false;
 				if(!q.empty()){
 					dq.push_front(q.front());
 					q.pop();
 				}
-			}else if(memcmp("end", top->s[run], 3)==0){
+			}else if(op == 'd'){
 				M -= t[4];
 				putback = false;
 				break;	
@@ -115,11 +116,13 @@ void solve(int solve_id){
 int main(void){
 	freopen("uva210.in", "r", stdin);
 	int t, i;
-	while(scanf("%d", &t) != EOF){
-		for(i = 1;i <= t; i++){
-			solve(i);
+	scanf("%d", &t);
+	for(i = 1;i <= t; i++){
+		solve(i);
+		if(i < t){
 			printf("\n");
 		}
 	}
+	
 	return 0;
 }

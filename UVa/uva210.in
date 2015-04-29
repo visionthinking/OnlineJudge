@@ -8,6 +8,9 @@ b = 9
 print b
 unlock
 print b
+
+
+
 end
 a = 3
 print a
