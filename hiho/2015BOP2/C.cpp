@@ -21,7 +21,14 @@ struct bian {
 struct user a[MAX];
 struct bian b[MAX];
 int blen;
-int _count;
+long long _count;
+
+void debug(){
+	for(int i=0;i<blen;i++){
+		printf("i=%d u1=%d [%d] u2=%d [%d] w=%d\n", i+1, b[i].u1, a[b[i].u1].sex, b[i].u2, a[b[i].u2].sex, b[i].w);
+	}
+	printf("count=%lld\n", _count);
+}
 
 void changebian(int x, int y, int z){
 	//find
@@ -30,7 +37,7 @@ void changebian(int x, int y, int z){
 	len = a[x].v.size();
 	for(i=0;i<len;i++){
 		int t = a[x].v[i];
-		if((b[t].u1 == x && b[t].u2 == y ) || (b[t].u1 == x && b[t].u2 == y)){
+		if((b[t].u1 == x && b[t].u2 == y ) || (b[t].u2 == x && b[t].u1 == y)){
 			old = b[t].w;
 			b[t].w = z;
 			finded = true;
@@ -53,8 +60,6 @@ void changebian(int x, int y, int z){
 		}
 		blen+=1;
 	}
-	
-	cout << "finded:" <<  finded << endl;
 }
 
 void solution(){
@@ -66,6 +71,7 @@ void solution(){
 	scanf("%d %d %d", &n, &m, &q);
 	for(i=1;i<=n;i++){
 		scanf("%d", &a[i].sex);
+		a[i].v.clear();
 	}
 	for(i=0;i<m;i++){
 		scanf("%d %d %d", &x, &y, &z);
@@ -89,7 +95,7 @@ void solution(){
 			for(j=0;j<lll;j++){
 				int t = a[y].v[j];
 				int other;
-				if(b[t].u1 == x){
+				if(b[t].u1 == y){
 					other = b[t].u2;
 				}else{
 					other = b[t].u1;	
@@ -99,12 +105,16 @@ void solution(){
 				}else{
 					_count += b[t].w;	
 				}
+				//printf("%d %d %d\n", b[t].u1, b[t].u2, b[t].w);
+				//printf("%d %d\n", y, other);
+				//debug();
 			}
+			
 		}else if(x == 2){
 			scanf("%d %d %d", &x, &y, &z);
 			changebian(x, y, z);
 		}else if(x == 3){
-			printf("%d\n", _count);
+			printf("%lld\n", _count);
 		}
 	}
 }
