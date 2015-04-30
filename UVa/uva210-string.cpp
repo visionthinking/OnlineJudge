@@ -41,7 +41,7 @@ void read(){
 	for(i=0;i<n;i++){
 		j = 0;
 		while(getline(cin, prg[i].code[j++])){
-			if(prg[i].code[j-1].length() > 0){
+			if(prg[i].code[j-1].length() >= 3){
 				if(prg[i].code[j-1][2] == 'd'){
 					break;
 				}
