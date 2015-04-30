@@ -38,8 +38,7 @@ void read(){
 	bool flag = false;
 	for(i=0;i<n;i++){
 		j = 0;
-		while(1){
-			fgets(prg[i].s[j], MAX_LINE, stdin);
+		while(fgets(prg[i].s[j], MAX_LINE, stdin)){
 			int len = strlen(prg[i].s[j]);
 			if(prg[i].s[j][len-1] == '\n'){
 				prg[i].s[j][len-1] = 0;
