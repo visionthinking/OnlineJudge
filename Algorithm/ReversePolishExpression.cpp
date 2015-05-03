@@ -23,12 +23,10 @@ int get_level(char x){
     case '-':
         level = 3;
         break;
-   
     case '*':
     case '/':
         level = 4;
         break;
-    
     case '(':
 	case ')':
         level = 5;
@@ -58,8 +56,7 @@ int get_result(int a, int b, char op){
 	return res;
 }
 
-void calc(const string & exp){
-	cout << exp << endl;
+void reverse_polish(const string & exp){
 	tokens.clear();
 	int len = exp.length();
 	int t;
@@ -108,6 +105,8 @@ void calc(const string & exp){
 		ops.pop_back();
 	}
 	
+	//print reverse polish expr
+#ifdef PRINT_REVERSE_POLISH
 	for(int i=0;i<tokens.size();i++){
 		if(tokens[i].type == TYPE_NUM){
 			printf("%d ", tokens[i].data);
@@ -115,7 +114,39 @@ void calc(const string & exp){
 			printf("%c ", tokens[i].data);
 		}
 	}
-	printf("\n\n");
+	printf("\n");
+#endif
+}
+
+void calc_reverse_polish(){
+	vector<struct token> s;
+	for(int i=0;i<tokens.size();i+=1){
+		if(tokens[i].type == TYPE_NUM){
+			s.push_back(tokens[i]);
+		}else{
+			int num1, num2;
+			if(s.size() >= 2 && s.back().type == TYPE_NUM){
+				num2 = s.back().data;
+				s.pop_back();
+			}else{
+				printf("error\n");
+				return;
+			}
+			if(s.back().type == TYPE_NUM){
+				num1 = s.back().data;
+				s.pop_back();
+			}else{
+				printf("error\n");
+				return;
+			}
+			s.push_back((struct token){TYPE_NUM, get_result(num1, num2, (char)tokens[i].data)});
+		}
+	}
+	if(s.size() > 1 || (!s.empty() && s[0].type != TYPE_NUM)){
+		printf("error\n");
+	}else{
+		printf("%d\n", s[0].data);
+	}
 }
 
 int main(void){
@@ -123,7 +154,9 @@ int main(void){
 	freopen("expression.in", "r", stdin);
 	string exp;
 	while(getline(cin, exp)){
-		calc(exp);
+		printf("\n%s\n", exp.c_str());
+		reverse_polish(exp);
+		calc_reverse_polish();
 	}
 	return 0;
 }
