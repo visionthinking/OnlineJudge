@@ -6,6 +6,8 @@
 #include <vector>
 using namespace std;
 
+const char OP_NEG = 1;
+
 const int TYPE_NUM = 0;
 const int TYPE_OP = 1;
 struct token {
@@ -27,9 +29,12 @@ int get_level(char x){
     case '/':
         level = 4;
         break;
+    case OP_NEG:
+    	level = 5;
+    	break;
     case '(':
 	case ')':
-        level = 5;
+        level = 6;
         break;
 	
 	}
@@ -60,19 +65,25 @@ void reverse_polish(const string & exp){
 	tokens.clear();
 	int len = exp.length();
 	int t;
-	bool nn = false;
+	bool is_num = false;
+	char last_op = ' ';
 	vector<char> ops;
 	for(int i=0;i<len;i++){
 		char ch = exp[i];
+		if(ch == ' ') continue;
 		if('0' <= ch && ch <= '9'){
-			if(!nn){
+			if(!is_num){
 				t = 0;
-				nn = true;
+				is_num = true;
 			}
 			t = t * 10 + (ch-'0');
-		}else if(ch != ' '){
-			if(nn){
-				nn = false;
+		}else{
+			if(!is_num){
+				if(ch == '-' && last_op != ')'){
+					ch = OP_NEG;
+				}
+			}else{
+				is_num = false;
 				tokens.push_back((struct token){TYPE_NUM, t});
 			}
 			
@@ -94,10 +105,11 @@ void reverse_polish(const string & exp){
 				}
 				ops.push_back(ch);
 			}
+			last_op = ch;
 		}
 	}
-	if(nn){
-		nn = false;
+	if(is_num){
+		is_num = false;
 		tokens.push_back((struct token){TYPE_NUM, t});
 	}
 	while(ops.size() > 0){
@@ -106,16 +118,17 @@ void reverse_polish(const string & exp){
 	}
 	
 	//print reverse polish expr
-#ifdef PRINT_REVERSE_POLISH
+//#ifdef PRINT_REVERSE_POLISH
 	for(int i=0;i<tokens.size();i++){
 		if(tokens[i].type == TYPE_NUM){
 			printf("%d ", tokens[i].data);
 		}else{
-			printf("%c ", tokens[i].data);
+			//the '~' reprsents OP NEGATIVE
+			printf("%c ", (tokens[i].data == 1) ? '~' : tokens[i].data);
 		}
 	}
 	printf("\n");
-#endif
+//#endif
 }
 
 void calc_reverse_polish(){
@@ -125,21 +138,32 @@ void calc_reverse_polish(){
 			s.push_back(tokens[i]);
 		}else{
 			int num1, num2;
-			if(s.size() >= 2 && s.back().type == TYPE_NUM){
-				num2 = s.back().data;
-				s.pop_back();
+			if(tokens[i].data == OP_NEG){
+				if(s.size() >= 1 && s.back().type == TYPE_NUM){
+					num1 = s.back().data;
+					s.pop_back();
+				}else{
+					printf("error\n");
+					return;
+				}
+				s.push_back((struct token){TYPE_NUM, -num1});
 			}else{
-				printf("error\n");
-				return;
+				if(s.size() >= 2 && s.back().type == TYPE_NUM){
+					num2 = s.back().data;
+					s.pop_back();
+				}else{
+					printf("error\n");
+					return;
+				}
+				if(s.back().type == TYPE_NUM){
+					num1 = s.back().data;
+					s.pop_back();
+				}else{
+					printf("error\n");
+					return;
+				}
+				s.push_back((struct token){TYPE_NUM, get_result(num1, num2, (char)tokens[i].data)});
 			}
-			if(s.back().type == TYPE_NUM){
-				num1 = s.back().data;
-				s.pop_back();
-			}else{
-				printf("error\n");
-				return;
-			}
-			s.push_back((struct token){TYPE_NUM, get_result(num1, num2, (char)tokens[i].data)});
 		}
 	}
 	if(s.size() > 1 || (!s.empty() && s[0].type != TYPE_NUM)){
