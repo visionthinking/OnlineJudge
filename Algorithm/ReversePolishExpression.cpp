@@ -4,6 +4,9 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+
+#define PRINT_REVERSE_POLISH
+
 using namespace std;
 
 const char OP_NEG = 1;
@@ -118,7 +121,7 @@ void reverse_polish(const string & exp){
 	}
 	
 	//print reverse polish expr
-//#ifdef PRINT_REVERSE_POLISH
+#ifdef PRINT_REVERSE_POLISH
 	for(int i=0;i<tokens.size();i++){
 		if(tokens[i].type == TYPE_NUM){
 			printf("%d ", tokens[i].data);
@@ -128,7 +131,7 @@ void reverse_polish(const string & exp){
 		}
 	}
 	printf("\n");
-//#endif
+#endif
 }
 
 void calc_reverse_polish(){
