@@ -102,7 +102,24 @@ void solve(int case_id, int n, int m){
 			inv = !inv;	
 		}
 	}
-	print();
+	
+	bool is_odd = true;
+	if(!inv){
+		for(int i=a[0].right;a[i].right!=0;i=a[i].right){
+			if(is_odd){
+				sum += a[i].data;
+			}
+			is_odd = !is_odd;
+		}
+	}else{
+		for(int i=a[n+1].left;a[i].left!=0;i=a[i].left){
+			if(is_odd){
+				sum += a[i].data;
+			}
+			is_odd = !is_odd;
+		}
+	}
+	
 	printf("Case %d: %lld\n", case_id, sum);
 }
 
