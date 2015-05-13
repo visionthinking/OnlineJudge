@@ -87,6 +87,8 @@ void solve(const string & inorder, const string & postorder){
 	}
 	len = i;
 	
+	if(len == 0) return; //Prevent a blank line
+	
 	tlen = 0;
 	alloc();
 	minsum = 1000000;
