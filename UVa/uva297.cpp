@@ -15,32 +15,72 @@ struct node tree2[MAX];
 int len;
 
 int alloc(struct node * tree){
-	memset(tree[len].child, -1, sizeof(int)*4);
+	//memset(tree[len].child, -1, sizeof(int)*4);
 	return len++;
 }
 
 //'p': grey, 'f': black, 'e': white
 int p;
-void build(struct node * tree, const string & str){
+void build(struct node * tree, const string & str, int k){
 	if(p >= str.length()){
 		return;
 	}
-	int k;
-	char c = str[p];
-	p += 1;
-	
-	if(c == 'f' || c == 'e'){
-		k = alloc(tree);
-		tree[k].c = c;
-	}else if(c == 'p'){
-		k = alloc(tree);
-		tree[k].c = c;
-		
+	char c = str[p++];
+	tree[k].c = c;
+	if(c == 'p'){
+		for(int i=0;i<4;i++){
+			tree[k].child[i] = alloc(tree);
+			build(tree, str, tree[k].child[i]);
+		}
 	}
 }
 
-int calc(){
+int f(struct node * tree, int n, int area){
+	int res = 0;
+	if(tree[n].c == 'p'){
+		for(int i=0;i<4;i++){
+			res += f(tree, tree[n].child[i], area / 4);
+		}
+	}else if(tree[n].c == 'f'){
+		res += area;
+	}
+	//printf("f.res = %d\n", res);
+	return res;
+}
 
+int calc(int p1, int p2, int area){
+	char c1 = tree1[p1].c;
+	char c2 = tree2[p2].c;
+	int res;
+	if(c1 == 'f' || c2 == 'f'){
+		printf("fx|xf\n");
+		res = area;
+	}else if(c1 == 'e'){
+		if(c2 == 'e'){
+			//ee
+			res = 0;
+			printf("ee\n");
+		}else{
+			//ep
+			printf("ep\n");
+			res = f(tree2, p2, area);
+		}
+	}else{
+		if(c2 == 'e'){
+			//pe
+			printf("pe\n");
+			res = f(tree1, p1, area);
+		}else{
+			//pp
+			printf("pp\n");
+			res = 0;
+			for(int i=0;i<4;i++){
+				res += calc(tree1[p1].child[i], tree2[p2].child[i], area / 4);
+			}
+		}
+	}
+	printf("calc.res = %d\n", res);
+	return res;
 }
 
 void solve(){
@@ -48,12 +88,12 @@ void solve(){
 	
 	getline(cin, a);
 	getline(cin, b);
-	len = 0;p = 0;
-	build(tree1, a);
-	len = 0;p = 0;
-	build(tree2, b);
+	p = 0;
+	build(tree1, a, alloc(tree1));
+	p = 0;
+	build(tree2, b, alloc(tree2));
 	
-	printf("There are %d black pixels.\n", calc());
+	printf("There are %d black pixels.\n", calc(0, 0, 1024));
 }
 
 int main(void){
