@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
-//const int CYCLE[6] = {1, 5, 3, 2, 4, 0};
+const int CYCLE[6] = {1, 5, 3, 2, 4, 0};
+/* CYCLE_P[i] points to index of WORD. 
+ * e.g. CYCLE_P[0] represents word 'W' has no cycle.
+ */
 const int CYCLE_P[6] = {5, 0, 3, 2, 4, 1};
 const char WORD[6] = {'A', 'D', 'J', 'K', 'S', 'W'};
 const int MAXW = 300;
