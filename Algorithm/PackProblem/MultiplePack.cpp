@@ -40,18 +40,28 @@ void solve(){
 	int cost[MAX], value[MAX], quantity[MAX];
 	int n;
 	
-	memset(dp, 0, sizeof(dp));
-	
 	scanf("%d %d", &n, &capacity);
 	for(int i=0;i<n;i++){
 		scanf("%d %d %d", &cost[i], &value[i], &quantity[i]);
 	}
 	
+	memset(dp, 0, sizeof(dp));
+	for(int i=0;i<n;i++){
+		zero_one_pack(cost[i], value[i]);
+	}
+	printf("ZeroOnePack: %d\n", dp[capacity]);
+	
+	memset(dp, 0, sizeof(dp));
+	for(int i=0;i<n;i++){
+		complete_pack(cost[i], value[i]);
+	}
+	printf("CompletePack: %d\n", dp[capacity]);
+	
+	memset(dp, 0, sizeof(dp));
 	for(int i=0;i<n;i++){
 		multiple_pack(cost[i], value[i], quantity[i]);
 	}
-	
-	printf("%d\n", dp[capacity]);
+	printf("MultiplePack: %d\n", dp[capacity]);
 }
 
 int main(void){
