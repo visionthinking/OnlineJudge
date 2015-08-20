@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-#include <stdio.h>
-#include <stdlib.h>
 
 using namespace std;
 
@@ -33,10 +31,8 @@ void solve(){
 				}
 				j -= 1;
 			}
-			int remove;
 			if(now < 0){
-				remove = i - j - len[k];
-				d[i] = min( d[i], (j<0?0:d[j])+remove );
+				d[i] = min( d[i], (j<0?0:d[j]) + i - j - len[k] );
 			}
 		}
 	}
