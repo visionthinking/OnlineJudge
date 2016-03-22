@@ -4,8 +4,8 @@
 #include <algorithm>
 using namespace std;
 
-const int MAX_E = 4040400;
-const int MAX_V = 2020205;
+const int MAX_E = 4000000;
+const int MAX_V = 2000005;
 
 struct edge {
 	int v1, v2;
@@ -43,7 +43,7 @@ void kruskal_algorithm(){
 	/* 2. initialize the union set */
 	union_init();
 	
-	/* 3. traverse the edges(u, v), if find(u) != find(v), then merge them.  */
+	/* 3. traverse the edges(u, v), if u, v not in the same set, then merge them.  */
 	int cnt = V_len;
 	int sum = 0;
 	for(int i=0;i<E_len && cnt>1;i++){
