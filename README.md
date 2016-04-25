@@ -9,3 +9,4 @@ https://github.com/aoapc-book/aoapc-bac2nd
  - HDU 1394, 求逆序数
  - HDU 3433, 二分答案 + DP
  - 2016-BUPT-ICPC-Archer-In-Archery, 二分答案 + 线性时间判别答案正确性 O(nlog(H+nS))
+ - HEU 1211, 二分答案 + 二分查找(注意lower_bound, upper_bound的返回值的差异)
