@@ -66,23 +66,21 @@ void solve(int kase){
 	
 	LL drop = 0, last_pos;
 	map<int, LL> one;
-	set<int> cover;
 	for(int i=0; i<len;) {
 		LL pos = a[i].pos;
-		if(cover.size() == 1) {
-			LL t = one[*cover.begin()] += pos - last_pos;
+		if(one.size() == 1) {
+			LL t = one.begin()->second += pos - last_pos;
 			drop = max(drop, t);
 		}
 		while(a[i].pos == pos) {
 			if(a[i].start) {
 				one[a[i].id] = 0;
-				cover.insert(a[i].id);
 			} else {
-				cover.erase(a[i].id);
+				one.erase(a[i].id);
 			}
 			i += 1;
 		}	
-		if(cover.size() == 1) {
+		if(one.size() == 1) {
 			last_pos = pos;
 		}
 	}

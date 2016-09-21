@@ -2,23 +2,13 @@
 #include <string.h>
 #include <string>
 #include <unordered_map>
+#include <map>
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
-
-#define MAX_LINE 100
-
-int readline(char * a){
-	fgets(a, MAX_LINE, stdin);
-	int len = strlen(a);
-	if(a[len-1] == '\n'){
-		a[len-1] = 0;
-		len -= 1;
-	}
-	return len;
-}
 
 void solve(int kase){
 	long long res, L, R;

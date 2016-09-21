@@ -8,25 +8,23 @@
 
 using namespace std;
 
-#define MAX_LINE 100
+typedef unsigned long long LL;
 
-int readline(char * a){
-	fgets(a, MAX_LINE, stdin);
-	int len = strlen(a);
-	if(a[len-1] == '\n'){
-		a[len-1] = 0;
-		len -= 1;
+LL near(LL n) {
+	return 1ull << (63ull - __builtin_clzll(n));
+}
+
+void solve(int kase) {
+	LL n, m;
+	int c = 0;
+	scanf("%llu", &n);
+	while(n != 1 && n != (m = near(n))) {
+		c += 1;
+		n = - n + m + m;
 	}
-	return len;
+	printf("Case #%d: %d\n", kase, c & 1);
 }
 
-void solve(int kase){
-	long long res, L, R;
-	scanf("%lld %lld", &L, &R);
-	res = min(L, R);
-	res = res * (res + 1) / 2;
-	printf("Case #%d: %lld\n", kase, res);
-}
 
 int main(int argc, char *argv[]){
 	if(argc >= 2) {

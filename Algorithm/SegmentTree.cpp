@@ -4,7 +4,7 @@
 inline int min(int a, int b) { return a < b ? a : b; };
 
 const int MAX = 100000;
-const int MAX_SEG = MAX << 2 | 10;
+const int MAX_SEG = MAX * 4 + 10;
 const int MAX_INT = 1 << 30;
 struct node {
 	int left, right;
